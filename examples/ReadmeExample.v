@@ -27,15 +27,16 @@ Definition echoed (n : nat)
   := interp (handler n) echo.
 
 (* Equational reasoning *)
-Theorem echoed_id : forall n, echoed n ≈ Ret n.
+(* Theorem echoed_id : forall n, echoed n \u2248 Ret n. *)
+Theorem echoed_id : forall n, eutt eq (echoed n) (Ret n).
 Proof.
   intros n.              (*   echoed n *)
-  unfold echoed, echo.   (* ≈ interp (handler n) (x <- trigger Input ;; Ret x) *)
-  rewrite interp_bind.   (* ≈ x <- interp (handler n) Input ;; interp (handler n) (Ret x) *)
+  unfold echoed, echo.   (* \u2248 interp (handler n) (x <- trigger Input ;; Ret x) *)
+  rewrite interp_bind.   (* \u2248 x <- interp (handler n) Input ;; interp (handler n) (Ret x) *)
   rewrite interp_trigger.
-                         (* ≈ x <- handler n _ Input ;; interp (handler n) (Ret x) *)
-  cbn.                   (* ≈ x <- Ret n ;; interp (handler n) (Ret x) *)
-  rewrite bind_ret_l.    (* ≈ interp (handler n) (Ret n) *)
-  rewrite interp_ret.    (* ≈ Ret n *)
+                         (* \u2248 x <- handler n _ Input ;; interp (handler n) (Ret x) *)
+  cbn.                   (* \u2248 x <- Ret n ;; interp (handler n) (Ret x) *)
+  rewrite bind_ret_l.    (* \u2248 interp (handler n) (Ret n) *)
+  rewrite interp_ret.    (* \u2248 Ret n *)
   reflexivity.
 Qed.
